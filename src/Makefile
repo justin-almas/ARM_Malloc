@@ -13,4 +13,7 @@ run: all
 .PHONY: gdb
 gdb: all
 	qemu-arm -g 1234 -L /usr/arm-linux-gnueabihf malloc.elf
-	
+
+.PHONY: clean
+clean:
+	rm -f *.o *.elf	
