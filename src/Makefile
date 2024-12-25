@@ -1,4 +1,6 @@
 #target remote :1234
+#arm-none-eabi-gdb
+
 
 .PHONY: all
 all: 
