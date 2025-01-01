@@ -90,6 +90,7 @@ find_best_fit:
 		
 	end_while_find_best_fit:
 	mov r0, r1 //return best
+	pop {r4}
 	bx lr
 		
 
