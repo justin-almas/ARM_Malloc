@@ -26,7 +26,6 @@ add_to_list:
 	//push {r4-r11}
 	//for simplicity, assume always one valid block
 	ldr r1, =addr_list
-	ldr r1, [r1]
 	mov r2, #0 //previous pointer
 	while_add_to_list:
 		cmp r1, #0
@@ -42,6 +41,23 @@ add_to_list:
 	str r1, [r0]
 	bx lr
 
+remove_from_list:
+	//address of block in r0
+	ldr r1, =addr_list //curr
+	while_remove_from_list:
+		ldr r2, [r1]
+		cmp r2, #0
+		beq end_while_remove_from_list
+		cmp r2, r0
+		bpl end_while_remove_from_list
+		mov r1, r2
+	
+	end_while_remove_from_list:
+	cmp r0, r2
+	ldreq r3, [r2]
+	streq r3, [r1]
+	bx lr
+	
 
 
 
