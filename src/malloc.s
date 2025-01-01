@@ -57,9 +57,23 @@ remove_from_list:
 	ldreq r3, [r2]
 	streq r3, [r1]
 	bx lr
-	
 
-
+find_best_fit:
+	//size in r0
+	mov r1, #0 //best
+	ldr r2, =addr_list //curr
+	while_find_best_fit:
+		cmp r2, #0
+		beq end_while_find_best_fit
+		ldr r3, [r2, #4]
+		cmp r3, r0
+		moveq r0, r3
+		bxeq lr
+		
+			
+	end_while_find_best_fit:
+	mov r0, r1 //return best
+		
 
 
 
