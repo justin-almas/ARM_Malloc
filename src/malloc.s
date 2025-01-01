@@ -51,6 +51,7 @@ remove_from_list:
 		cmp r2, r0
 		bpl end_while_remove_from_list
 		mov r1, r2
+		b while_remove_from_list
 	
 	end_while_remove_from_list:
 	cmp r0, r2
@@ -62,6 +63,7 @@ find_best_fit:
 	//size in r0
 	mov r1, #0 //best
 	ldr r2, =addr_list //curr
+	push {r4}
 	while_find_best_fit:
 		cmp r2, #0
 		beq end_while_find_best_fit
@@ -69,10 +71,26 @@ find_best_fit:
 		cmp r3, r0
 		moveq r0, r3
 		bxeq lr
-		
+		cmp r0, r3
+		bpl find_best_end_if
+		cmp r1, #0
+		bne find_best_else_if
+		mov r1, r2
+		b find_best_end_if
+		find_best_else_if:
+		ldr r4, [r1, #4]
+		cmp r3, r4
+		bpl find_best_end_if
+		mov r1, r2
 			
+		find_best_end_if:
+		ldr r2, [r2]
+		b while_find_best_fit
+
+		
 	end_while_find_best_fit:
 	mov r0, r1 //return best
+	bx lr
 		
 
 
