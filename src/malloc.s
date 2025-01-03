@@ -94,8 +94,20 @@ find_best_fit:
 	bx lr
 		
 
-
-
+split_block:
+	//r0 is block address
+	//r1 is size
+	ldr r2, [r0, #4] //block size
+	add r3, r1, r2  //block + block size
+	sub r3, r3, r1  //block + block size - size
+	//r3 = newblock
+	sub r2, r2, #64
+	sub r2, r2, r1
+	str r2, [r0, #4]
+	str r1, [r3, #4]
+	mov r0, r3
+	bx lr
+	
 exit:
     mov r0, #1              // File descriptor 1 (stdout)
     ldr r1, =exit_message  // Address of the string
