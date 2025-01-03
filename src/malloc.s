@@ -107,6 +107,17 @@ split_block:
 	str r1, [r3, #4]
 	mov r0, r3
 	bx lr
+
+
+merge:
+	//r0 has left address
+	//r1 has right address
+	ldr r2, [r1]
+	str r2, [r0]
+	ldr r2, [r1, #4]
+	add r2, r2, #64
+	str r2, [r0, #4]
+	bx lr
 	
 exit:
     mov r0, #1              // File descriptor 1 (stdout)
