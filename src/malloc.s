@@ -118,6 +118,24 @@ merge:
 	add r2, r2, #64
 	str r2, [r0, #4]
 	bx lr
+
+find_right:
+	//r0 has address of freed block
+	mov r1, r0 //curr
+	ldr r2, [r0, #4] //r2 = freed block size
+	add r0, #64 //get to end of metadata
+	add r0, r2 //get to end of block
+	while_find_right:
+		cmp r1, #0
+		beq end_while_find_right
+		cmp r1, r0
+		bxeq lr
+		ldr r1, [r1]
+		b while_find_right
+		
+	end_while_find_right:
+	mov r0, #0
+	bx lr
 	
 exit:
     mov r0, #1              // File descriptor 1 (stdout)
