@@ -31,7 +31,7 @@ add_to_list:
 		cmp r1, #0
 		beq end_while_add_to_list
 		cmp r1, r0
-		bpl end_while_add_to_list
+		bhs end_while_add_to_list
 		mov r2, r1
 		ldr r1, [r1]
 		b while_add_to_list
@@ -49,7 +49,7 @@ remove_from_list:
 		cmp r2, #0
 		beq end_while_remove_from_list
 		cmp r2, r0
-		bpl end_while_remove_from_list
+		bhs end_while_remove_from_list
 		mov r1, r2
 		b while_remove_from_list
 	
@@ -72,7 +72,7 @@ find_best_fit:
 		moveq r0, r3
 		bxeq lr
 		cmp r0, r3
-		bpl find_best_end_if
+		bhs find_best_end_if
 		cmp r1, #0
 		bne find_best_else_if
 		mov r1, r2
@@ -80,7 +80,7 @@ find_best_fit:
 		find_best_else_if:
 		ldr r4, [r1, #4]
 		cmp r3, r4
-		bpl find_best_end_if
+		bhs find_best_end_if
 		mov r1, r2
 			
 		find_best_end_if:
@@ -157,6 +157,19 @@ find_left:
 	end_while_find_left:
 	mov r0, #0
 	bx lr
+
+
+malloc:
+	//r0 has size
+	cmp r0, #0
+	movls r0, #0
+	bxls lr
+	mov r4, r0 //save size in r4
+	bl find_best_fit
+	//r0 now has bestfit
+	cmp r0, #0
+	bxeq lr //return null if no fit
+	
 	
 exit:
     mov r0, #1              // File descriptor 1 (stdout)
