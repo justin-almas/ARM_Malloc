@@ -123,8 +123,8 @@ find_right:
 	//r0 has address of freed block
 	mov r1, r0 //curr
 	ldr r2, [r0, #4] //r2 = freed block size
-	add r0, #64 //get to end of metadata
-	add r0, r2 //get to end of block
+	add r0, r0, #64 //get to end of metadata
+	add r0, r0, r2 //get to end of block
 	while_find_right:
 		cmp r1, #0
 		beq end_while_find_right
@@ -136,6 +136,27 @@ find_right:
 	end_while_find_right:
 	mov r0, #0
 	bx lr
+
+
+find_left:
+	//r0 has address of freed block
+	mov r1, r0 //r1 is curr
+	while_find_left:
+		cmp r1, #0
+		beq end_while_find_left
+		cmp r1, r0
+		bge end_while_find_left
+		ldr r2, [r1, #4] 
+		add r2, r2, #64
+		cmp r2, r0
+		moveq r0, r1
+		bxeq lr
+		ldr r1, [r1]
+		b while_find_left
+		
+	end_while_find_left:
+	mov r0, #0
+	bx lr
 	
 exit:
     mov r0, #1              // File descriptor 1 (stdout)
@@ -143,7 +164,6 @@ exit:
     mov r2, #14             // Length of the string (including newline)
     mov r7, #4              // syscall number for sys_write
     swi 0                   // Make the syscall
-
     // Exit the program with status code 0
     mov r0, #0              // Exit status code 0
     mov r7, #1              // syscall number for sys_exit
