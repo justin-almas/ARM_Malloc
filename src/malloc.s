@@ -161,6 +161,7 @@ find_left:
 
 malloc:
 	//r0 has size
+	push {lr}
 	cmp r0, #0
 	movls r0, #0
 	bxls lr
@@ -169,6 +170,31 @@ malloc:
 	//r0 now has bestfit
 	cmp r0, #0
 	bxeq lr //return null if no fit
+
+	ldr r1, [r0, #4] //bestfit size
+	sub r1, r1, r4
+	cmp r1, #72
+	bhs malloc_else
+	mov r5, r0 //preserve bestfit
+	bl remove_from_list
+	add r5, r5, #64
+	mov r0, r5
+	pop {lr}
+	bx lr
+
+	malloc_else:
+	//here r0 still has best fit
+	mov r1, r4 //get size into r1
+	bl split_block
+	add r0, r0, #64
+	pop {lr}
+	bx lr
+
+free:
+	//ptr to free in r0
+	push {lr}
+	cmp r0, #0
+	bxeq lr
 	
 	
 exit:
